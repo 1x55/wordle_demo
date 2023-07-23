@@ -14,6 +14,7 @@ function initBoard() {
         let row = document.createElement("div")
         row.className = "letter-row"
         
+        // Use the length of the rightGuessString to determine the number of boxes
         for (let j = 0; j < 5; j++) {
             let box = document.createElement("div")
             box.className = "letter-box"
