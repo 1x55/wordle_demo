@@ -24,5 +24,47 @@ function initBoard() {
         board.appendChild(row)
     }
 }
-
 initBoard()
+//set up event listener for the keyup event
+document.addEventListener("keyup", (e) => {
+
+    //event listerner will not execute further when gussesReamianing === 0
+    if (guessesRemaining === 0) {
+        return
+    }
+    //e.key is the pressed key from event, stored in variable 'pressedKey' as a string
+    let pressedKey = String(e.key)
+
+    //nextLetter !== 0: It checks if the variable nextLetter is not equal to 0. This suggests that there is a letter to delete (at the current cursor position)
+    if (pressedKey === "Backspace" && nextLetter !== 0) {
+        deleteLetter()
+        return
+    }
+
+    if (pressedKey === "Enter") {
+        checkGuess()
+        return
+    }
+
+    let found = pressedKey.match(/[a-z]/gi)
+    if (!found || found.length > 1) {
+        return
+    } else {
+        insertLetter(pressedKey)
+    }
+})
+
+//define insertLetter function
+function insertLetter (pressedKey) {
+    if(nextLetter === 5) {
+        return
+    }
+    pressedKey = pressedKey.toLowerCase()
+
+    let row = document.getElementsByClassName("letter-roe")[6 = guessesRemaining]
+    let box = row.children[nextLetter]
+    box.textContent = pressedKey
+    box.classList.add('filled-box')
+    currentGuess.push(pressedKey)
+    nextLetter += 1
+}
