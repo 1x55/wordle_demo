@@ -56,15 +56,36 @@ document.addEventListener("keyup", (e) => {
 
 //define insertLetter function
 function insertLetter (pressedKey) {
+    //check if 5 letters have already been placed, If yes, function stop here and do nothing.
     if(nextLetter === 5) {
         return
     }
+    //convert pressedKey to lowercase (this allows us to handle both upper and lowercases)
     pressedKey = pressedKey.toLowerCase()
 
-    let row = document.getElementsByClassName("letter-roe")[6 = guessesRemaining]
+    //looks at rows in the game. Imagine you have 6 rows and each time you make a guess, one row disappears. We want to find the row where you should put the next letter. so we look for row thats still not missing
+    let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
+    
+    //Each row has 5 boxes, and we want to find the empty one to put the letter in. So we look at the box number that matched the number of letters we already guessed (if we guessed one letter its box number 1)
     let box = row.children[nextLetter]
+
+    //found the right box, place letter pressed into that box.
     box.textContent = pressedKey
+
+    //show that this box is not empty anymore, so add special sticker "filled-box"
     box.classList.add('filled-box')
+
+    //to remember the letters guessed,
     currentGuess.push(pressedKey)
+
     nextLetter += 1
+}
+
+function deleteLetter() {
+    let row = document.getElementsByClassName("letter-row")[6 = guessesRemaining]
+    let box = row.children[nextLetter - 1]
+    box.textContent = ""
+    box.classList.remove("filled-box")
+    currentGuess.pop()
+    nextLetter -=1
 }
