@@ -1,3 +1,4 @@
+import { returnStatement } from "babel-types";
 import { WORDS} from "./words.js";
 
 const NUMBER_OF_GUESSES = 6;
@@ -82,10 +83,85 @@ function insertLetter (pressedKey) {
 }
 
 function deleteLetter() {
-    let row = document.getElementsByClassName("letter-row")[6 = guessesRemaining]
+    //looks for specific row in the game to delete letter. Have 6 rows, each time wrong guess made, one row disappears.
+    let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
+    
+    //inside that row, there are boxes, want to find the box where the last letter was placed. We know which box to find 'nextLetter'. Need to go back one step, to the box where the letter we want to delete is. "nextLetter - 1"
     let box = row.children[nextLetter - 1]
+
+    //with right box found, we remove the letter from it
     box.textContent = ""
+
+    //show box is empty now, by removing 'filled-box'
     box.classList.remove("filled-box")
+
+    //update list of letters guessed
     currentGuess.pop()
+
+    //tell game we removed a letter form box. move to previous box.
     nextLetter -=1
 }
+
+function checkGuesses() {
+    let row = document.getElementsByClassName('letter-row')[6 - guessesRemaining]
+    let get = guessString = ''
+    let rightGuess = Array.from(rightGuessString)
+
+    for (const val of currentGuess) {
+        guessString += val
+    }
+
+    if (guessString.length !=5) {
+        toastr.error("Not enough Letters! ")
+        return
+    }
+
+    if (!WORDS.includes(guessString)) {
+        toastr.error("Word not in list!")
+        returnStatement
+    }
+
+    for (let i = 0; i< 5; i++) {
+        let letterColor = ''
+        let box = row,children[i]
+        let letter = currentGuess[i]
+
+        let letterPosition = rightGuess.indexOf(currentGuess[i])
+        //is letter in the correct guess
+        if (letterPosition === -1) {
+            letterColor = 'grey'
+        } else {
+            if (currentGuess[i] === rightGuess[i]) {
+                //shade green
+                letterColor = 'green'
+            } else {
+                //shade yellow
+                letterColor = 'yellow'
+            }
+            rightGuess[letterPosition] = "#"
+        }
+
+        let delay = 250 * i
+        setTimeout(() => {
+            //shade box
+            box.style.backgroundColor = letterColor
+            ShadeKeyBoard(letter, letterColor)
+        }, delay)
+    }
+
+    if (guessString === rightGuessString) {
+        toastr.success("You guessed right! Game over!")
+        guessesRemaining = 0
+        return
+    } else {
+        guessesRemaining -= 1;
+        currentGuess = [];
+        nextLetter = 0;
+
+        if (guessesRemaining === 0) {
+            toastr.error("You've run out of guesses! Game over!")
+            toastr.info(`The right word was: "${rightGuessString}"`)
+        }
+    }
+}
+
